@@ -5,7 +5,7 @@ from secondary_token import secondary_token
 
 class Vk:
 
-    def __init__(self, vk_id, version='5.131'):
+    def __init__(self, vk_id: str, version='5.131'):
         self.token = secondary_token
         self.version = version
         self.params = {'access_token': self.token, 'v': self.version}
@@ -13,17 +13,28 @@ class Vk:
         self.headers = Headers(os='win', browser='chrome').generate()
         self.vk_id = vk_id
 
+    def get_city_id(self, city: str):
+
+        '''когда у пользователя скрыт город, получаем id города из названия для вк апи'''
+
+        params = {'country_id': 1, 'q': city, 'count': 1}
+        response = requests.get(self.url + 'database.getCities', headers=self.headers, params={**self.params, **params}).json()
+        return response['response']['items'][0]['id']
+
     def get_params_for_search(self):
+
         '''получаем параметры для поиска с помощью id пользователя который пишет, если их нет, просим задать вручную'''
 
         params = {'user_ids': self.vk_id, 'fields': 'bdate, city, sex'}
         response = requests.get(self.url + 'users.get', headers=self.headers, params={**self.params, **params}).json()
-
-
-        user_age = current_age(response['response'][0]['bdate'])
-
-        user_city = response['response'][0]['city']['id']
-
+        try:
+            user_age = current_age(response['response'][0]['bdate'])
+        except KeyError:
+            user_age = 30 #сюда подставить возраст который напишет в вк сообщение
+        try:
+            user_city = response['response'][0]['city']['id']
+        except KeyError:
+            user_city = self.get_city_id('луховицы') #сюда подставляем город в котором ищет если не указан
         if response['response'][0]['sex'] == 2:
             sex_for_search = 1
         else:
@@ -37,8 +48,10 @@ class Vk:
             'has_photo': 1,
             'count': 1000,
             'fields[]': ['city', 'sex', 'domain', 'bdate']
-        }
+            }
+
         return search_params
+
 
     def search_peoples(self):
 
@@ -48,10 +61,11 @@ class Vk:
         search_params = self.get_params_for_search()
 
         response = requests.get(self.url + 'users.search', params={**self.params, **search_params},
-                                headers=self.headers)
+                                headers=self.headers).json()
         result = []
 
-        for people in response.json()['response']['items']:
+        for people in response['response']['items']:
+
             try:
                 if people['city']['id'] != search_params['city_id']:
                     continue
@@ -64,7 +78,7 @@ class Vk:
                     continue
             except KeyError:
                 continue
-
+        print(result)
         return result
 
     def create_data(self):
