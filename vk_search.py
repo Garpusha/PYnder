@@ -21,7 +21,7 @@ class Vk:
         response = requests.get(self.url + 'database.getCities', headers=self.headers, params={**self.params, **params}).json()
         return response['response']['items'][0]['id']
 
-    def get_params_for_search(self, city, age):
+    def get_params_for_search(self, city=None, age=None):
 
         '''получаем параметры для поиска с помощью id пользователя который пишет, если их нет, просим задать вручную'''
 
