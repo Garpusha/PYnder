@@ -12,14 +12,17 @@ class Vk:
         self.url = 'https://api.vk.com/method/'
         self.headers = Headers(os='win', browser='chrome').generate()
         self.vk_id = vk_id
+        self.search_index = 0
 
     def get_city_id(self, city: str):
 
         '''когда у пользователя скрыт город, получаем id города из названия для вк апи'''
-
-        params = {'country_id': 1, 'q': city, 'count': 1}
-        response = requests.get(self.url + 'database.getCities', headers=self.headers, params={**self.params, **params}).json()
-        return response['response']['items'][0]['id']
+        try:
+            params = {'country_id': 1, 'q': city, 'count': 1}
+            response = requests.get(self.url + 'database.getCities', headers=self.headers, params={**self.params, **params}).json()
+            return response['response']['items'][0]['id']
+        except:
+            pass
 
     def get_params_for_search(self, city=None, age=None):
 
@@ -29,11 +32,11 @@ class Vk:
         response = requests.get(self.url + 'users.get', headers=self.headers, params={**self.params, **params}).json()
         try:
             user_age = current_age(response['response'][0]['bdate'])
-        except KeyError:
+        except:
             user_age = age #сюда подставить возраст который напишет в вк сообщение
         try:
             user_city = response['response'][0]['city']['id']
-        except KeyError:
+        except:
             user_city = self.get_city_id(city) #сюда подставляем город в котором ищет если не указан
         if response['response'][0]['sex'] == 2:
             sex_for_search = 1
@@ -46,7 +49,7 @@ class Vk:
             'sex': sex_for_search,
             'is_closed': False,
             'has_photo': 1,
-            'count': 1000,
+            'count': 100,
             'fields[]': ['city', 'sex', 'domain', 'bdate']
             }
 
@@ -78,7 +81,7 @@ class Vk:
                     continue
             except KeyError:
                 continue
-        print(result)
+
         return result
 
     def create_data(self):
@@ -94,7 +97,7 @@ class Vk:
             data.append({
                 'firstname': people['first_name'],
                 'last_name': people['last_name'],
-                'vk_id': people['id'],
+                'vk_id': str(people['id']),
                 'birth_date': people['bdate'],
                 'gender': people['sex'],
                 'city': city
@@ -131,11 +134,25 @@ class Vk:
                 pass
 
         return final_data
+    def search_favorite(self, data):
+
+        return f'{data[self.search_index]["firstname"]} {data[self.search_index]["last_name"]} \n' \
+              f'https://vk.ru/id{data[self.search_index]["vk_id"]} {data[self.search_index]["images"]}'
 
 
-def main(vk_id):
+
+def main(vk_id, button_click):
     vk = Vk(vk_id)
-    return vk.get_final_data()
+    vk.search_index = 0
+    data = vk.get_final_data()
+    while True:
+        vk.search_favorite(data)
+        button = button_click
+        if button == 'дальше':
+            vk.search_index += 1
+        elif button == 'назад':
+            vk.search_index -= 1
+
 
 
 if __name__ == '__main__':
