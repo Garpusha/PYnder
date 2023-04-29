@@ -21,7 +21,7 @@ class Vk:
         response = requests.get(self.url + 'database.getCities', headers=self.headers, params={**self.params, **params}).json()
         return response['response']['items'][0]['id']
 
-    def get_params_for_search(self):
+    def get_params_for_search(self, city, age):
 
         '''получаем параметры для поиска с помощью id пользователя который пишет, если их нет, просим задать вручную'''
 
@@ -30,11 +30,11 @@ class Vk:
         try:
             user_age = current_age(response['response'][0]['bdate'])
         except KeyError:
-            user_age = 30 #сюда подставить возраст который напишет в вк сообщение
+            user_age = age #сюда подставить возраст который напишет в вк сообщение
         try:
             user_city = response['response'][0]['city']['id']
         except KeyError:
-            user_city = self.get_city_id('луховицы') #сюда подставляем город в котором ищет если не указан
+            user_city = self.get_city_id(city) #сюда подставляем город в котором ищет если не указан
         if response['response'][0]['sex'] == 2:
             sex_for_search = 1
         else:
