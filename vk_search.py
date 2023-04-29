@@ -1,8 +1,7 @@
 import requests
 from fake_headers import Headers
-from secondary_token import secondary_token
 from functions import current_age, sort_photo_by_likes
-
+from secondary_token import secondary_token
 
 class Vk:
 
@@ -15,13 +14,17 @@ class Vk:
         self.vk_id = vk_id
 
     def get_params_for_search(self):
+        '''получаем параметры для поиска с помощью id пользователя который пишет, если их нет, просим задать вручную'''
+
         params = {'user_ids': self.vk_id, 'fields': 'bdate, city, sex'}
-        response = requests.get(self.url + 'users.get', headers=self.headers, params={**self.params, **params})
-        user_age = current_age(response.json()['response'][0]['bdate'])
+        response = requests.get(self.url + 'users.get', headers=self.headers, params={**self.params, **params}).json()
 
-        user_city = response.json()['response'][0]['city']['id']
 
-        if response.json()['response'][0]['sex'] == 2:
+        user_age = current_age(response['response'][0]['bdate'])
+
+        user_city = response['response'][0]['city']['id']
+
+        if response['response'][0]['sex'] == 2:
             sex_for_search = 1
         else:
             sex_for_search = 2
