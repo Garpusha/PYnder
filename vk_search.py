@@ -70,7 +70,7 @@ class Vk:
                 if people['city']['id'] != search_params['city_id']:
                     continue
 
-                elif people['is_closed'] == True:
+                elif people['is_closed']:
                     continue
 
                 else:
