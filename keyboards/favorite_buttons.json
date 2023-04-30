@@ -1,0 +1,26 @@
+{
+  "one_time": false,
+  "buttons": [
+    [{
+      "action": {
+        "type": "text",
+        "label": "Предыдущий"
+      },
+      "color": "primary"
+    },
+      {
+      "action": {
+        "type": "text",
+        "label": "Следующий"
+      },
+      "color": "primary"
+    }],
+    [{
+        "action": {
+          "type": "text",
+          "label": "Вернутся в поиск"
+        },
+        "color": "negative"
+      }]
+  ]
+}

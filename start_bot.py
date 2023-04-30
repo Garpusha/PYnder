@@ -25,9 +25,14 @@ def first_keyboards(id_, text):
 def all_buttons(id_, text, images_list):
     vk.messages.send(user_id=id_, message=text, attachment=images_list, random_id=0, keyboard=open('keyboards/all_buttons.json', "r", encoding="UTF-8").read())
 
+def favorite_buttons(id_, text):
+    vk.messages.send(user_id=id_, message=text, random_id=0, keyboard=open('keyboards/favorite_buttons.json', "r", encoding="UTF-8").read())
 
 def sender(id_, text):
     vk.messages.send(user_id=id_, message=text, random_id=0)
+
+def return_buttons(id_, text):
+    vk.messages.send(user_id=id_, message=text, random_id=0, keyboard=open('keyboards/all_buttons.json', "r", encoding="UTF-8").read())
 
 
 # логика бота
@@ -85,10 +90,17 @@ for event in longpoll.listen():
                         else:
                             sender(my_id, 'Не найдено.\n')
                     case 'просмотреть избранное':
+                        favorite_buttons(my_id, 'Захожу в избранное')
+                    case 'вернутся в поиск':
+                        return_buttons(my_id, 'Возвращаюсь')
+                    case'следующий':
+                        # сюда код для прохода по избранным вперед
+                        pass
+                    case 'предыдущий':
+                        # сюда код для прохода по избранным назад
                         pass
                     case _:
                         if len(msg) > 0:
                             first_keyboards(my_id, 'Привет, я бот для поиска новых знакомств!\nНажми на кнопку Старт.\n')
-
         except Exception as ex:
             print(ex)
