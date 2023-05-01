@@ -1,12 +1,15 @@
 import requests
 from fake_headers import Headers
-from functions import current_age, sort_photo_by_likes
-from secondary_token import secondary_token
+from functions import sort_photo_by_likes
+import configparser
+
+config = configparser.ConfigParser()  # создаём объекта парсера
+config.read('config.ini')
 
 
 class Vk:
     def __init__(self, vk_id: str, version="5.131"):
-        self.token = secondary_token
+        self.token = config["VK_token"]["secondary_token"]
         self.version = version
         self.params = {"access_token": self.token, "v": self.version}
         self.url = "https://api.vk.com/method/"

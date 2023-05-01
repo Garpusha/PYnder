@@ -1,16 +1,17 @@
 import vk_api
 from vk_api.longpoll import VkLongPoll, VkEventType
-import os
-from dotenv import load_dotenv
-
 import db_function as dbf
 from vk_search import Vk
+import configparser
+
+
+config = configparser.ConfigParser()  # создаём объекта парсера
+config.read('config.ini')
 
 my_pynder = dbf.PYnder_DB(rebuild=True)
 
-load_dotenv()
 
-access_token = "vk1.a.DgZYkbQunPH3tt2laq6yTrug7UXP_qZSY-rd9hn7yzM16rhv0pUR17TKeCR-35AlskBuo4wNYFhtNHXJj_JVa1ZBOSPBOiU9lAfIXy6MDgSKMH6e6VzHE6vu0-tILMneTopl6IstYB6d3A01powr38KXsFPTTwJIDhXWakU4F0dh5lu8D__youAwZ0cEQsdfbM8w_Fe19rDxNKPE3Al3pA"
+access_token = config["VK_token"]["TOKEN"]
 vk_session = vk_api.VkApi(token=access_token)
 vk = vk_session.get_api()
 longpoll = VkLongPoll(vk_session)

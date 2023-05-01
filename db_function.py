@@ -5,7 +5,7 @@ import sqlalchemy as sq
 from sqlalchemy.orm import sessionmaker
 
 
-def get_db_config(ini_file: str = "db.ini") -> str:
+def get_db_config(ini_file: str = "config.ini") -> str:
     """
     Function reads from ini file following parameters from section [DataBase]:\n
     IP = IP address where DB is running in general format, e.g. 127.0.0.1\n
@@ -13,7 +13,7 @@ def get_db_config(ini_file: str = "db.ini") -> str:
     DBName = database name\n
     User = username\n
     Password = password\n
-    :param ini_file: .ini filename with path if necessary, by default - db.ini\n
+    :param ini_file: .ini filename with path if necessary, by default - config.ini\n
     :return: DSN string for sqlalchemy engine creation:\n
     postgresql://{db_user}:{db_pwd}@{db_ip}:{db_port}/{db_name}\n
     """
@@ -39,7 +39,7 @@ def get_db_config(ini_file: str = "db.ini") -> str:
 
 class PYnder_DB:
     def __init__(self, rebuild: bool):
-        self.engine = sq.create_engine(get_db_config("db.ini"))
+        self.engine = sq.create_engine(get_db_config("config.ini"))
         self.Session = sessionmaker(bind=self.engine)
         self.session = self.Session()
         if rebuild:

@@ -6,7 +6,7 @@
           "type": "text",
           "label": "Старт"
         },
-        "color": "secondary"
+        "color": "negative"
       }]
   ]
 }
