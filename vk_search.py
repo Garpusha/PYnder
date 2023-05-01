@@ -39,17 +39,17 @@ class Vk:
         ).json()
         try:
             # (Саша) временно закомментировал выбор возраста
-            user_age = 30
-            # user_age = current_age(response['response'][0]['bdate'])
+            # user_age = 30
+            user_age = age(response['response'][0]['bdate'])
         except:
             user_age = 30  # сюда подставить возраст который напишет в вк сообщение
 
         try:  # (Саша) временно закомментировал выбор города
-            user_city = 1
-            # user_city = response['response'][0]['city']['id']
+            # user_city = 1
+            user_city = response['response'][0]['city']['id']
         except:
-            # user_city = self.get_city_id(city) #сюда подставляем город в котором ищет если не указан
-            user_city = 1
+            user_city = self.get_city_id(city) #сюда подставляем город в котором ищет если не указан
+            # user_city = 1
         if response["response"][0]["sex"] == 2:
             sex_for_search = 1
         else:
@@ -61,7 +61,7 @@ class Vk:
             "sex": sex_for_search,
             "is_closed": False,
             "has_photo": 3,
-            "count": 10,
+            "count": 100,
             "fields[]": ["city", "sex", "domain", "bdate"],
         }
 

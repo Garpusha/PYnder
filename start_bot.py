@@ -114,7 +114,6 @@ for event in longpoll.listen():
                             print(index)
                             user_text, user_photo = vk_search.search_favorite(index, my_data)
                             all_buttons(my_id, user_text, user_photo)
-                        # continue
                     case "добавить в избранное":
                         if my_pynder.add_favorite(my_data[index], str(my_id)):
                             sender(my_id, "Добавлено.\n")
