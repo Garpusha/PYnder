@@ -18,7 +18,7 @@
     [{
         "action": {
           "type": "text",
-          "label": "Вернутся в поиск"
+          "label": "Вернуться в поиск"
         },
         "color": "negative"
       }]
