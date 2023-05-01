@@ -9,7 +9,7 @@ config.read('config.ini')
 
 my_pynder = dbf.PYnder_DB(rebuild=True)
 
-access_token = config["VK_token"]["TOKEN"]
+access_token = config["VK_token"]["group_token"]
 vk_session = vk_api.VkApi(token=access_token)
 vk = vk_session.get_api()
 longpoll = VkLongPoll(vk_session)
@@ -74,7 +74,6 @@ def start_buttons():
 first_run = True
 index = 0
 mode = 0
-
 for event in longpoll.listen():
     if event.type == VkEventType.MESSAGE_NEW:
         try:
@@ -84,14 +83,11 @@ for event in longpoll.listen():
                     my_id = event.user_id
                     vk_search = Vk(my_id)
                     my_data = vk_search.get_final_data()
-                    print(len(my_data))  #(Саша) убрать в релизе
                 msg = event.text.lower()
                 my_msg = event.message
 
                 match msg:
                     case "старт🚀":
-                        start_buttons()
-                    case "настройки":
                         start_buttons()
                     case "назад":
                         if index == 0:
