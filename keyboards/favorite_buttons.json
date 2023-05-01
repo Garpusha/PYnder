@@ -20,7 +20,7 @@
           "type": "text",
           "label": "Вернуться в поиск"
         },
-        "color": "negative"
+        "color": "positive"
       },
       {
         "action": {

@@ -197,12 +197,16 @@ for event in longpoll.listen():
                                     favorite_index, favorite_dict
                                 )
                                 favorite_buttons(my_id, f_user_text, f_user_photo)
+                    case "закончить поиск":
+                        first_keyboards(my_id,"Пока(((\nЕсли хочешь снова искать,\n нажми на кнопку Старт.\n")
+
+
                     case _:
                         if len(msg) > 0:
                             mode = 1 #Режим поиска
                             first_keyboards(
                                 my_id,
-                                "Привет, я бот для поиска новых знакомств!\nНажми на кнопку Старт.\n",
+                                "Привет, я бот для поиска новых знакомств!\nНажми на кнопку Старт.\n"
                             )
         except Exception as ex:
             print(ex)
