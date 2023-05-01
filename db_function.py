@@ -255,7 +255,7 @@ class PYnder_DB:
                     city=new_record["city"],
                     sex=new_record["sex"],
                     birth_date=new_record["birth_date"],
-                    url=new_record["url"]
+                    url=new_record["url"],
                 )
                 db.add(my_record)
                 db.commit()
