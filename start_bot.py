@@ -4,12 +4,10 @@ import db_function as dbf
 from vk_search import Vk
 import configparser
 
-
 config = configparser.ConfigParser()  # создаём объекта парсера
 config.read('config.ini')
 
 my_pynder = dbf.PYnder_DB(rebuild=True)
-
 
 access_token = config["VK_token"]["TOKEN"]
 vk_session = vk_api.VkApi(token=access_token)
@@ -60,6 +58,17 @@ def return_buttons(id_, text):
         keyboard=open("keyboards/all_buttons.json", "r", encoding="UTF-8").read(),
     )
 
+def start_buttons():
+    index = 0
+    sender(my_id, "Секунду, ищу варианты для тебя.\n")
+    my_pynder.add_owner(str(my_id))
+    my_data = vk_search.get_final_data()
+    sender(my_id, f"Найдено вариантов: {len(my_data)}.")
+    user_text, user_photo = vk_search.search_favorite(
+        index, my_data
+    )
+    return all_buttons(my_id, user_text, user_photo)
+
 
 # логика бота
 first_run = True
@@ -80,17 +89,8 @@ for event in longpoll.listen():
                 my_msg = event.message
 
                 match msg:
-                    case "старт":
-                        index = 0
-                        sender(my_id, "Секунду, ищу варианты для тебя.\n")
-                        my_pynder.add_owner(str(my_id))
-                        my_data = vk_search.get_final_data()
-                        sender(my_id, f"Найдено вариантов: {len(my_data)}.")
-                        user_text, user_photo = vk_search.search_favorite(
-                            index, my_data
-                        )
-                        all_buttons(my_id, user_text, user_photo)
-                        # continue
+                    case "старт🚀":
+                        start_buttons()
                     case "назад":
                         if index == 0:
                             sender(my_id, "Это самая первая запись, предыдущих нет.\n")
@@ -101,7 +101,6 @@ for event in longpoll.listen():
                                 index, my_data
                             )
                             all_buttons(my_id, user_text, user_photo)
-                            # continue
                     case "дальше":
                         if index == len(my_data) - 1:
                             # Тима, наверное здесь стоит сделать запрос новых записей если можно вытащить не первые 10,
@@ -198,9 +197,7 @@ for event in longpoll.listen():
                                 )
                                 favorite_buttons(my_id, f_user_text, f_user_photo)
                     case "закончить поиск":
-                        first_keyboards(my_id,"Пока(((\nЕсли хочешь снова искать,\n нажми на кнопку Старт.\n")
-
-
+                        first_keyboards(my_id,"Пока(((\nЕсли захочешь снова искать,\nнажми на кнопку Старт.")
                     case _:
                         if len(msg) > 0:
                             mode = 1 #Режим поиска

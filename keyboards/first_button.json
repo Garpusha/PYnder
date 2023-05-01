@@ -4,9 +4,9 @@
     [{
         "action": {
           "type": "text",
-          "label": "Старт"
+          "label": "Старт\uD83D\uDE80"
         },
-        "color": "negative"
+        "color": "positive"
       }]
   ]
 }
