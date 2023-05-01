@@ -91,6 +91,8 @@ for event in longpoll.listen():
                 match msg:
                     case "старт🚀":
                         start_buttons()
+                    case "настройки":
+                        start_buttons()
                     case "назад":
                         if index == 0:
                             sender(my_id, "Это самая первая запись, предыдущих нет.\n")

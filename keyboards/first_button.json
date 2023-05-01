@@ -7,6 +7,13 @@
           "label": "Старт\uD83D\uDE80"
         },
         "color": "positive"
+      },
+    {
+        "action": {
+          "type": "text",
+          "label": "Настройки"
+        },
+        "color": "negative"
       }]
   ]
 }
