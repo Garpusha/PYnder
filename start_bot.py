@@ -135,6 +135,7 @@ for event in longpoll.listen():
                             favorite_dict = my_pynder.get_favorite(str(my_id))
                             if len(favorite_dict) == 0:
                                 sender(my_id, "В Избранном ничего нет.\n")
+                                all_buttons(my_id, user_text, user_photo)
                             else:
                                 if mode == 2:
                                     if favorite_index > len(favorite_dict) - 1:
@@ -148,6 +149,7 @@ for event in longpoll.listen():
                                 sender(my_id, "Не найдено.\n")
                             elif mode == 2:
                                 sender(my_id, "В Избранном ничего нет.\n")
+                                all_buttons(my_id, user_text, user_photo)
                     case "просмотреть избранное":
                         favorite_dict = my_pynder.get_favorite(str(my_id))
                         if len(favorite_dict) == 0:
@@ -165,7 +167,6 @@ for event in longpoll.listen():
                         sender(my_id, "Возвращаюсь в режим поиска. Ты остановился здесь:\n")
                         mode = 1 #Режим поиска
                         all_buttons(my_id, user_text, user_photo)
-
                     # Навигация в Избранном
                     case "следующий":
                         if len(favorite_dict) == 0:
