@@ -91,12 +91,12 @@ class PYnder_DB:
                 if f_vkid not in vk_ids:
                     vk_ids.append(f_vkid)
                     favorite_dict["vk_id"] = element[1]
-                    favorite_dict["f_name"] = element[2]
-                    favorite_dict["l_name"] = element[3]
+                    favorite_dict["first_name"] = element[2]
+                    favorite_dict["last_name"] = element[3]
                     favorite_dict["city"] = element[4]
                     favorite_dict["sex"] = element[5]
                     favorite_dict[
-                        "b_date"
+                        "birth_date"
                     ] = f"{element[6].day}.{element[6].month}.{element[6].year}"
                     favorite_dict["url"] = element[7]
                     favorite_dict["images"] = [{"url": element[8], "likes": element[9]}]
