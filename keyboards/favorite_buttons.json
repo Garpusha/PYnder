@@ -21,6 +21,13 @@
           "label": "Вернуться в поиск"
         },
         "color": "negative"
+      },
+      {
+        "action": {
+          "type": "text",
+          "label": "Удалить из Избранного"
+        },
+        "color": "negative"
       }]
   ]
 }

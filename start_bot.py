@@ -63,6 +63,7 @@ def return_buttons(id_, text):
 # логика бота
 first_run = True
 index = 0
+mode = 0
 
 for event in longpoll.listen():
     if event.type == VkEventType.MESSAGE_NEW:
@@ -120,20 +121,38 @@ for event in longpoll.listen():
                         else:
                             sender(my_id, "Уже добавлено.\n")
                     case "удалить из избранного":
-                        if my_pynder.delete_favorite(
-                            my_data[index]["vk_id"], str(my_id)
-                        ):
+                        if mode == 1:
+                            delete_result = my_pynder.delete_favorite(my_data[index]["vk_id"], str(my_id))
+                        elif mode == 2:
+                            if len(favorite_dict) == 0:
+                                delete_result = False
+                            else:
+                                delete_result = my_pynder.delete_favorite(favorite_dict[favorite_index]["vk_id"], str(my_id))
+
+                        if delete_result:
                             sender(my_id, "Удалено.\n")
                             favorite_dict = my_pynder.get_favorite(str(my_id))
                             if len(favorite_dict) == 0:
-                                sender(my_id, "В избранном ничего нет.\n")
+                                sender(my_id, "В Избранном ничего нет.\n")
+                            else:
+                                if mode == 2:
+                                    if favorite_index > len(favorite_dict) - 1:
+                                        favorite_index = len(favorite_dict) - 1
+                                    f_user_text, f_user_photo = vk_search.search_favorite(
+                                        favorite_index, favorite_dict
+                                    )
+                                    favorite_buttons(my_id, f_user_text, f_user_photo)
                         else:
-                            sender(my_id, "Не найдено.\n")
+                            if mode == 1:
+                                sender(my_id, "Не найдено.\n")
+                            elif mode == 2:
+                                sender(my_id, "В Избранном ничего нет.\n")
                     case "просмотреть избранное":
                         favorite_dict = my_pynder.get_favorite(str(my_id))
                         if len(favorite_dict) == 0:
                             sender(my_id, "В избранном ничего нет.\n")
                         else:
+                            mode = 2    #Режим избранного
                             sender(my_id, "Захожу в Избранное.\n")
                             favorite_index = 0
                             sender(my_id, f"Записей в Избранном: {len(favorite_dict)}.\n")
@@ -143,33 +162,42 @@ for event in longpoll.listen():
                             favorite_buttons(my_id, f_user_text, f_user_photo)
                     case "вернуться в поиск":
                         sender(my_id, "Возвращаюсь в режим поиска. Ты остановился здесь:\n")
+                        mode = 1 #Режим поиска
                         all_buttons(my_id, user_text, user_photo)
 
+                    # Навигация в Избранном
                     case "следующий":
-                        # сюда код для прохода по избранным вперед
-                        if favorite_index == len(favorite_dict) - 1:
-                            sender(my_id, "Это последняя запись в Избранном.\n")
-                        elif favorite_index > len(favorite_dict) - 1:
-                            #Это на случай реализации удаления внутри Избранного
-                            favorite_index = len(favorite_dict) - 1
-                            sender(my_id, "Это последняя запись в Избранном.\n")
+                        if len(favorite_dict) == 0:
+                            sender(my_id, "В избранном ничего нет.\n")
                         else:
-                            favorite_index += 1
-                            f_user_text, f_user_photo = vk_search.search_favorite(
-                                favorite_index, favorite_dict
-                            )
-                            favorite_buttons(my_id, f_user_text, f_user_photo)
+                            # сюда код для прохода по избранным вперед
+                            if favorite_index == len(favorite_dict) - 1:
+                                sender(my_id, "Это последняя запись в Избранном.\n")
+                            elif favorite_index > len(favorite_dict) - 1:
+                                #Это на случай реализации удаления внутри Избранного
+                                favorite_index = len(favorite_dict) - 1
+                                sender(my_id, "Это последняя запись в Избранном.\n")
+                            else:
+                                favorite_index += 1
+                                f_user_text, f_user_photo = vk_search.search_favorite(
+                                    favorite_index, favorite_dict
+                                )
+                                favorite_buttons(my_id, f_user_text, f_user_photo)
                     case "предыдущий":
-                        if favorite_index == 0:
-                            sender(my_id, "Это первая запись в Избранном.\n")
+                        if len(favorite_dict) == 0:
+                            sender(my_id, "В избранном ничего нет.\n")
                         else:
-                            favorite_index -= 1
-                            f_user_text, f_user_photo = vk_search.search_favorite(
-                                favorite_index, favorite_dict
-                            )
-                            favorite_buttons(my_id, f_user_text, f_user_photo)
+                            if favorite_index == 0:
+                                sender(my_id, "Это первая запись в Избранном.\n")
+                            else:
+                                favorite_index -= 1
+                                f_user_text, f_user_photo = vk_search.search_favorite(
+                                    favorite_index, favorite_dict
+                                )
+                                favorite_buttons(my_id, f_user_text, f_user_photo)
                     case _:
                         if len(msg) > 0:
+                            mode = 1 #Режим поиска
                             first_keyboards(
                                 my_id,
                                 "Привет, я бот для поиска новых знакомств!\nНажми на кнопку Старт.\n",
